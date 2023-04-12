@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPF - Busca</title>
+</head>
+<body>
+    <header>
+        <h1>Busca - CPF </h1>
+    </header>
+    <main>
+        <form>
+            <h3>POST</h3>
+            <label for="">Nome:</label>
+            <input type="text" id="nome">
+            <br><br>
+
+            <label for="">Idade:</label>
+            <input type="text" id="idade">
+            <br><br>
+
+            <label for="">CPF:</label>
+            <input type="text" id="cpfCadastro">
+            <br><br>
+            <input type="button" onclick="enviarDados()" value="Enviar">
+            <br><br>
+        </form>
+
+
+        <h3>GET/PUT</h3>
+        <label for="">ID:</label>
+        <input type="text" id="id">
+        <br><br>
+
+        <label for="">Nome:</label>
+        <input type="text" id="nomeAtualizar">
+        <br><br>
+
+        <label for="">Idade:</label>
+        <input type="text" id="idadeAtualizar">
+        <br><br>
+
+        <label for="">CPF:</label>
+        <input type="text" id="cpfAtualizar">
+        <br><br>
+        <input type="button" onclick="buscarDados()" value="Buscar">
+        <input type="button" onclick="atualizarDados()" value="Atualizar">
+        <br><br>
+
+        <h3>DELETE</h3>
+        <label for="">CPF:</label>
+        <input type="text" id="cpf">
+    </main>
+
+    <script>
+        //POST
+        function enviarDados(){
+            const nome = document.getElementById('nome').value;
+            const idade = document.getElementById('idade').value;
+            const cpf = document.getElementById('cpfCadastro').value;
+
+            fetch('http://localhost:3000/pessoas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({nome: nome, idade: idade, cpf: cpf})
+            })
+            .then(response => response.json())
+        }
+
+        //GET
+        function buscarDados(){
+            const cpf = document.getElementById('cpf').value;
+
+            fetch('http://localhost:3000/pessoas', {
+                method: 'GET'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const pessoaEncontrada = data.find(pessoa => pessoa.cpf === cpf)
+                if(pessoaEncontrada){
+                    document.getElementById('nomeAtualizar').value = pessoaEncontrada.nome;
+                    document.getElementById('nomeAtualizar').value = pessoaEncontrada.idade;
+                    document.getElementById('nomeAtualizar').value = pessoaEncontrada.cpf;
+                    document.getElementById('nomeAtualizar').value = pessoaEncontrada.id;
+                }else{
+                    alert("Pessoa não encontrada!");
+                }
+            })
+        }
+
+        //PUT
+        function atualizarDados(){
+            const id = document.getElementById('id').value;
+            const nome = document.getElementById('nomeAtualizar').value;
+            const idade = document.getElementById('idadeAtualizar').value;
+            const cpf = document.getElementById('cpfAtualizar').value;
+
+            fetch(`http://localhost:3000/pessoas/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type' : 'application/json'
+                },
+                body: JSON.stringify({nome: nome, idade: idade, cpf: cpf})
+            })
+            .then(response => response.json())
+        }
+
+        //DELETE
+        function deletarDados(){
+            const cpf = document.getElementById('cpf').value;
+
+            fetch('http://localhost:3000/pessoas')
+            .then(response  => response.json())
+            .then(data => {
+                data.forEach(objeto => {
+                    if(objeto.cpf === cpf){
+                        fetch(`http://localhost:3000/pessoas/${objeto.id}`,{
+                            method: 'DELETE'
+                        })
+                    }
+                })
+            })
+        }
+    </script>
+    
+</body>
+</html>

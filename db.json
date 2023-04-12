@@ -1,0 +1,16 @@
+{
+  "pessoas": [
+    {
+      "nome": "Beatriz",
+      "idade": 17,
+      "cpf": 2942349231,
+      "id": 1
+    },
+    {
+      "nome": "Anne",
+      "idade": "22",
+      "cpf": "123",
+      "id": 2
+    }
+  ]
+}
